@@ -1,0 +1,11 @@
+*.class
+
+
+# Package Files #
+*.jar
+
+#Config Files
+twitter4j.properties
+
+#IDEA spec stuff
+./idea/*
