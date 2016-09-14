@@ -16,6 +16,7 @@ public class Feed {
         String search = searchPrompt();
         Query query = new Query(search);
         QueryResult result = null;
+
         do {
             List<Status> tweets = new ArrayList<Status>();
 
@@ -27,7 +28,8 @@ public class Feed {
             }
 
             for (Status tweet : tweets) {
-                System.out.println("@" + tweet.getUser().getScreenName() + " - " + tweet.getText());
+                System.err.println("\t["+tweet.getCreatedAt()+" ("+ (tweet.getGeoLocation() != null ? tweet.getGeoLocation().getLatitude() : 0.0)+")] -- @"
+                                        +tweet.getUser().getScreenName() + " - " + tweet.getText());
             }
         } while ((query = result.nextQuery()) != null);
 
