@@ -1,34 +1,43 @@
 package com.mm;
 
-import twitter4j.Status;
-import twitter4j.Twitter;
-import twitter4j.TwitterException;
-import twitter4j.TwitterFactory;
+import twitter4j.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 /**
  * Created by marcomanglaviti on 16-09-13.
  */
 public class Feed {
 
-    public Feed(){
-        Twitter twitter = TwitterFactory.getSingleton();
-        List<Status> statuses = new ArrayList<Status>();
-        try {
-            statuses = twitter.getHomeTimeline();
-        } catch (TwitterException e){
-            System.out.println("ERROR: Could not get timeline :(");
-        }
-        System.out.println("\t\tShowing home timeline.");
-        for (Status status : statuses) {
-            System.out.println(status.getUser().getName() + ":" +
-                    status.getText());
-        }
+    public Feed() {
+        Twitter twitter = new TwitterFactory().getInstance();
+        String search = searchPrompt();
+        Query query = new Query(search);
+        QueryResult result = null;
+        do {
+            List<Status> tweets = new ArrayList<Status>();
+
+            try {
+                result = twitter.search(query);
+                tweets = result.getTweets();
+            } catch (TwitterException e) {
+                e.printStackTrace();
+            }
+
+            for (Status tweet : tweets) {
+                System.out.println("@" + tweet.getUser().getScreenName() + " - " + tweet.getText());
+            }
+        } while ((query = result.nextQuery()) != null);
 
     }
 
+    private static String searchPrompt(){
+        System.out.print("Enter text to search: ");
+        Scanner scan = new Scanner(System.in);
+        return scan.nextLine();
+    }
 
     public static void main(String [] args){
         System.out.println("\tStarting Twitter Feed...");
